@@ -1,0 +1,1 @@
+# kryha-tech-assessment
