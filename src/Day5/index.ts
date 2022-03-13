@@ -2,13 +2,48 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const calculateChange = (lineChange: string[]) => {
-    const [xStart, yStart] = lineChange[0].split(',').map(value => Number(value));
-    const [xEnd, yEnd] = lineChange[1].split(',').map(value => Number(value));
+    let [xStart, yStart] = lineChange[0].split(',').map(value => Number(value));
+    let [xEnd, yEnd] = lineChange[1].split(',').map(value => Number(value));
+    
     const change = {
         x: xEnd - xStart,
         y: yEnd - yStart,
     }
-    return change;
+    
+    const xChanges = [];
+    if(xEnd - xStart !== 0 || xStart - xEnd !== 0) {
+        if(change.x > 0) {
+            for (let index = 0; index <= change.x; index++) {
+                xChanges.push([xStart++, yStart])
+            }
+        }
+        else {
+            for (let index = 0; index <= Math.abs(change.x); index++) {
+                xChanges.push([xEnd++, yStart])
+            }
+        }
+    }
+
+    const yChanges = [];
+    if(yEnd - yStart !== 0 || yStart - yEnd !== 0) {
+        if(change.y > 0) {
+            for (let index = 0; index <= change.y; index++) {
+                yChanges.push([xStart, yStart++])
+            }
+        }
+        else {
+            for (let index = 0; index <= Math.abs(change.y); index++) {
+                yChanges.push([xStart, yEnd++])
+            }
+        }
+    }
+
+    if(xChanges.length > 0) {
+        return xChanges;
+    }
+    else if(yChanges.length > 0) {
+        return yChanges;
+    }
 }
 
 const input = readFileSync(join(__dirname, '..', 'vents.txt'), 'utf-8')
@@ -25,7 +60,12 @@ const input = readFileSync(join(__dirname, '..', 'vents.txt'), 'utf-8')
 
 console.log("🚀 ~ file: index.ts ~ line 16 ~ input", input)
 
-const vents = [
+const changes = input.map(line => {
+    return calculateChange(line.split('->').map(coord => coord.trim()))
+})
+console.log("🚀 ~ file: index.ts ~ line 66 ~ changes", changes.flat(1))
+
+ const vents = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -39,18 +79,8 @@ const vents = [
 ]
 console.log("🚀 ~ file: index.ts ~ line 41 ~ vents", vents)
 
-
-const coord = input[0].split('->').map(coord => coord.trim())[0].split(',').map(value => Number(value));
-console.log("🚀 ~ file: index.ts ~ line 44 ~ coord", coord)
-
-// console.log('change', calculateChange(input[0].split('->').map(coord => coord.trim())))
-
-vents.forEach((row, i) => {
-    row.forEach((point, j) => {
-        if (i === coord[1] && j === coord[0]) {
-            vents[i][j]++
-        }
-    })
+changes.flat(1).forEach(change => {
+    if(change) vents[change[1]][change[0]]++
 })
 
 console.log("🚀 ~ file: index.ts ~ line 41 ~ vents", vents)
