@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./build/index.js",
-    "dev": "nodemon ./src/index.ts"
+    "dev": "nodemon ./src/Day5/index.ts"
   },
   "dependencies": {
     "@types/node": "^17.0.21"
