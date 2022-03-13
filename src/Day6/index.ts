@@ -1,27 +1,12 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { Fish } from './classes/Fish';
 
 const lanternFish = readFileSync(join(__dirname, '..', 'fish.txt'), 'utf-8')
     .toString()
     .trim()
     .split(',')
     .map((r) => Number(r));
-
-class Fish {
-    age: number = -1;
-
-    constructor(age: number) {
-        this.age = age;
-    }
-
-    decrementLife() {
-        this.age--;
-    }
-
-    setAge(age: number) {
-        this.age = age
-    }
-}
 
 let fishes = lanternFish.map(fish => new Fish(fish))
 
