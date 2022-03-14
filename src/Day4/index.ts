@@ -6,5 +6,6 @@ const lines = readFileSync(__dirname + '/..' + '/boards.txt').toString().split('
 if (lines) {
     const bingoSystem = new BingoSystem(lines)
 
-    console.log('Winning score:', bingoSystem.run())
+    console.log('Part 1:', bingoSystem.run())
+    console.log('Part 2:', bingoSystem.runToLose())
 }

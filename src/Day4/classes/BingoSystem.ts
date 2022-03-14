@@ -31,7 +31,15 @@ export class BingoSystem {
         }
     }
 
-    drawNumber(): number | null {
+    runToLose(): number {
+        return this.draws.reduce((lastWinningScore) => {
+            const score = this.drawNumber(true);
+
+            return score === null ? lastWinningScore : score;
+        }, 0);
+    }
+
+    drawNumber(removeWinner: boolean = false): number | null {
         this.currentDrawIdx++;
         
         this.boards.forEach((board) => {
@@ -43,6 +51,10 @@ export class BingoSystem {
 
         if (winningBoard) {
             winningScore = winningBoard.score(this.draws[this.currentDrawIdx]);
+        }
+
+        if (removeWinner) {
+            this.boards = this.boards.filter((board) => !board.checkForWinningBoard());
         }
 
         return winningScore;
